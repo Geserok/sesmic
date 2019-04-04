@@ -1,26 +1,49 @@
 package UI;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+import static UI.MainFrame.stopStartFlag;
 
 public class ButtonsPanel extends JPanel {
 
-    public ButtonsPanel() {
-        JButton scrollDown = new JButton("V");
-        JButton scrollUp = new JButton("^");
-        this.setLayout(new GridLayout(2, 1));
-        this.add(scrollUp);
-        this.add(scrollDown);
+    private GraphPanel graphPanel;
 
-        scrollUp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ButtonsPanel.this.getParent().repaint();
+    public ButtonsPanel(GraphPanel graphPanel) {
+        this.graphPanel = graphPanel;
+        JButton startStop = new JButton("Start/stop");
+        JTextArea speed = new JTextArea("60");
+        speed.setBorder(new LineBorder(Color.BLACK));
+        this.setLayout(new GridLayout(20, 1));
+        this.add(startStop);
+        this.add(new JPanel());
+        this.add(new JPanel(){
+             {
+                 setBorder(new LineBorder(Color.BLACK));
+                 setLayout(new GridLayout(2,1));
+                add(new JTextField("Скорость обновления (точек/мин):"));
+                add(speed);
+            }
+        });
+
+
+        startStop.addActionListener(e -> {
+            if (stopStartFlag == true) {
+                stopStartFlag = false;
+            } else {
+                stopStartFlag = true;
+                try {
+                    int newSpeed = Integer.parseInt(speed.getText());
+                    if (newSpeed > 0 && newSpeed <= 600) {
+                        graphPanel.setSpeed(newSpeed);
+                    }
+                } catch (NumberFormatException e1) {
+                    speed.setText(String.valueOf(graphPanel.getSpeed()));
+                }
+
             }
         });
 
     }
-
 }

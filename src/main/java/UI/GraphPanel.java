@@ -1,5 +1,6 @@
 package UI;
 
+import Exceptions.EndOfFileExceptions;
 import Services.CoordinateCreator;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
@@ -9,13 +10,16 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import static UI.MainFrame.stopStartFlag;
 
 public class GraphPanel extends JPanel implements Runnable {
 
     private CoordinateCreator coordinateCreator = new CoordinateCreator();
     private XChartPanel[] graphs;
-    private int speed = 100;
+    private int speed = 1000;
     private double currentMaxY = 0d;
     private double currentMinY = -100d;
     private int currentYCoordinate = 1;
@@ -24,7 +28,8 @@ public class GraphPanel extends JPanel implements Runnable {
     public GraphPanel(XChartPanel[] graphs) {
         this.graphs = graphs;
         for (JPanel panel : graphs) {
-            this.add(panel);
+            this.add(new JScrollPane(panel));
+//            this.add(panel);
         }
         this.setLayout(new GridLayout(1, 5));
         this.repaint();
@@ -33,55 +38,64 @@ public class GraphPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         while (true) {
-            try {
-                TimeUnit.MILLISECONDS.sleep(speed);
-                update();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+            if (!stopStartFlag) {
+                try {
+                    Thread.currentThread().sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(speed);
+                    update();
+                } catch (InterruptedException | IOException e) {
+                    e.printStackTrace();
+                } catch (EndOfFileExceptions e) {
+                    new OptionalFrame();
+                    break;
+                }
             }
         }
     }
 
-    public void update() {
-        for (XChartPanel graph: graphs) {
-            XYChart chart = (XYChart) graph.getChart();
-            getSeriesForCharts(chart);
-            XYStyler styler = chart.getStyler();
-            if (currentYCoordinate > Math.abs(currentMinY)) {
-                currentMinY = currentMinY - 100d;
-                currentMaxY = currentMaxY - 100d;
+        public void update () throws IOException {
+            int i = 1;
+            for (XChartPanel graph : graphs) {
+                XYChart chart = (XYChart) graph.getChart();
+                getSeriesForCharts(chart, i);
+
+                i++;
             }
-            styler.setYAxisMin(currentMinY);
-            styler.setYAxisMax(currentMaxY);
+            currentYCoordinate++;
+            this.repaint();
         }
-        currentYCoordinate++;
-        this.repaint();
-    }
 
-    private void getSeriesForCharts(XYChart chart) {
-        double[] massY = new double[currentYCoordinate];
-        for (int j = 0; j < currentYCoordinate; j++) {
-            massY[j] = -j;
+        private void getSeriesForCharts (XYChart chart,int paramNumber) throws IOException {
+            double[] massY = new double[currentYCoordinate];
+            for (int j = 0; j < currentYCoordinate; j++) {
+                massY[j] = -j;
+            }
+            double[] xCoordinates = coordinateCreator.getXCoordinates(currentYCoordinate, paramNumber);
+            double[] yCoordinates = coordinateCreator.getYCoordinates(currentYCoordinate);
+            chart.removeSeries("a");
+            XYSeries series = chart.addSeries("a", xCoordinates, yCoordinates);
+            series.setMarker(SeriesMarkers.NONE);
         }
-        double[] coordinates = coordinateCreator.getCoordinates(currentYCoordinate);
-        chart.removeSeries("a");
-        XYSeries series = chart.addSeries("a", coordinates, massY);
-        series.setMarker(SeriesMarkers.NONE);
-    }
 
-    public int getSpeed() {
-        return speed;
-    }
+        public int getSpeed () {
+            return speed;
+        }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
+        public void setSpeed (int speed){
+            this.speed = 1000 * 1/(speed/60);
+        }
 
-    public void setCurrentMaxY(double currentMaxY) {
-        this.currentMaxY = currentMaxY;
-    }
+        public void setCurrentMaxY ( double currentMaxY){
+            this.currentMaxY = currentMaxY;
+        }
 
-    public void setCurrentMinY(double currentMinY) {
-        this.currentMinY = currentMinY;
+        public void setCurrentMinY ( double currentMinY){
+            this.currentMinY = currentMinY;
+        }
     }
-}
