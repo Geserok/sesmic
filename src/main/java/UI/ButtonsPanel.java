@@ -10,8 +10,8 @@ public class ButtonsPanel extends JPanel {
 
     private GraphPanel graphPanel;
 
-    public ButtonsPanel(GraphPanel graphPanel) {
-        this.graphPanel = graphPanel;
+    public ButtonsPanel() {
+        this.graphPanel = GraphPanel.getInstance();
         JButton startStop = new JButton("Start/stop");
         JTextArea speed = new JTextArea("60");
         speed.setBorder(new LineBorder(Color.BLACK));
@@ -29,7 +29,7 @@ public class ButtonsPanel extends JPanel {
 
 
         startStop.addActionListener(e -> {
-            if (stopStartFlag == true) {
+            if (stopStartFlag) {
                 stopStartFlag = false;
             } else {
                 stopStartFlag = true;

@@ -23,9 +23,19 @@ public class GraphPanel extends JPanel implements Runnable {
     private double currentMaxY = 0d;
     private double currentMinY = -100d;
     private int currentYCoordinate = 1;
+    private int quantityGraphs = 5;
 
+    private static GraphPanel instance;
 
-    public GraphPanel(XChartPanel[] graphs) {
+    public static GraphPanel getInstance() {
+        if (instance == null) {
+            instance = new GraphPanel();
+        }
+        return instance;
+    }
+
+    private GraphPanel() {
+        XChartPanel[] graphs = Graph.getArrayOfGraph(quantityGraphs);
         this.graphs = graphs;
         for (JPanel panel : graphs) {
             this.add(new JScrollPane(panel));
@@ -59,43 +69,43 @@ public class GraphPanel extends JPanel implements Runnable {
         }
     }
 
-        public void update () throws IOException {
-            int i = 1;
-            for (XChartPanel graph : graphs) {
-                XYChart chart = (XYChart) graph.getChart();
-                getSeriesForCharts(chart, i);
+    public void update() throws IOException {
+        int i = 1;
+        for (XChartPanel graph : graphs) {
+            XYChart chart = (XYChart) graph.getChart();
+            getSeriesForCharts(chart, i);
 
-                i++;
-            }
-            currentYCoordinate++;
-            this.repaint();
+            i++;
         }
-
-        private void getSeriesForCharts (XYChart chart,int paramNumber) throws IOException {
-            double[] massY = new double[currentYCoordinate];
-            for (int j = 0; j < currentYCoordinate; j++) {
-                massY[j] = -j;
-            }
-            double[] xCoordinates = coordinateCreator.getXCoordinates(currentYCoordinate, paramNumber);
-            double[] yCoordinates = coordinateCreator.getYCoordinates(currentYCoordinate);
-            chart.removeSeries("a");
-            XYSeries series = chart.addSeries("a", xCoordinates, yCoordinates);
-            series.setMarker(SeriesMarkers.NONE);
-        }
-
-        public int getSpeed () {
-            return speed;
-        }
-
-        public void setSpeed (int speed){
-            this.speed = 1000 * 1/(speed/60);
-        }
-
-        public void setCurrentMaxY ( double currentMaxY){
-            this.currentMaxY = currentMaxY;
-        }
-
-        public void setCurrentMinY ( double currentMinY){
-            this.currentMinY = currentMinY;
-        }
+        currentYCoordinate++;
+        this.repaint();
     }
+
+    private void getSeriesForCharts(XYChart chart, int paramNumber) throws IOException {
+        double[] massY = new double[currentYCoordinate];
+        for (int j = 0; j < currentYCoordinate; j++) {
+            massY[j] = -j;
+        }
+        double[] xCoordinates = coordinateCreator.getXCoordinates(currentYCoordinate, paramNumber);
+        double[] yCoordinates = coordinateCreator.getYCoordinates(currentYCoordinate);
+        chart.removeSeries("Param " + paramNumber);
+        XYSeries series = chart.addSeries("Param " + paramNumber, xCoordinates, yCoordinates);
+        series.setMarker(SeriesMarkers.NONE);
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = 1000 * 1 / (speed / 60);
+    }
+
+    public void setCurrentMaxY(double currentMaxY) {
+        this.currentMaxY = currentMaxY;
+    }
+
+    public void setCurrentMinY(double currentMinY) {
+        this.currentMinY = currentMinY;
+    }
+}

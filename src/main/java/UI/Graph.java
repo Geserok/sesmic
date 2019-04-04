@@ -8,7 +8,7 @@ import org.knowm.xchart.style.Styler;
 
 public class Graph {
 
-    public XChartPanel[] getArrayOfGraph(int numCharts) {
+    public static XChartPanel[] getArrayOfGraph(int numCharts) {
         XChartPanel[] graph = new XChartPanel[numCharts];
         for (int i = 0; i < numCharts; i++) {
             XYChart chart = new XYChartBuilder()
