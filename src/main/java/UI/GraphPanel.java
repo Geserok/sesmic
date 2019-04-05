@@ -10,6 +10,8 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -38,10 +40,10 @@ public class GraphPanel extends JPanel implements Runnable {
         XChartPanel[] graphs = Graph.getArrayOfGraph(quantityGraphs);
         this.graphs = graphs;
         for (JPanel panel : graphs) {
-            this.add(new JScrollPane(panel));
-//            this.add(panel);
+            this.add(panel);
         }
-        this.setLayout(new GridLayout(1, 5));
+        this.setSize(800, 3000);
+        this.setLayout(new FlowLayout());
         this.repaint();
     }
 
@@ -74,7 +76,6 @@ public class GraphPanel extends JPanel implements Runnable {
         for (XChartPanel graph : graphs) {
             XYChart chart = (XYChart) graph.getChart();
             getSeriesForCharts(chart, i);
-
             i++;
         }
         currentYCoordinate++;

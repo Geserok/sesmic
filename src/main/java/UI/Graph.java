@@ -13,9 +13,9 @@ public class Graph {
         for (int i = 0; i < numCharts; i++) {
             XYChart chart = new XYChartBuilder()
                     .xAxisTitle("Диапазон")
-                    .yAxisTitle("Глубина")
-                    .width(100)
-                    .height(300)
+                    .yAxisTitle("")
+                    .width(200)
+                    .height(3000)
                     .build();
 
             chart.getStyler().setYAxisMin(-1000d);

@@ -1,8 +1,6 @@
 import UI.ButtonsPanel;
-import UI.Graph;
 import UI.GraphPanel;
 import UI.MainFrame;
-import org.knowm.xchart.XChartPanel;
 
 public class Main {
 
