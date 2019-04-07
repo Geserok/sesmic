@@ -1,5 +1,6 @@
 package UI;
 
+import Exceptions.BadFormatOfFileException;
 import Exceptions.BadPathException;
 import Exceptions.EndOfFileExceptions;
 import Services.CoordinateCreator;
@@ -43,6 +44,9 @@ public class GraphPanel extends JPanel implements Runnable {
                 } catch (EndOfFileExceptions e) {
                     stopStartFlag = false;
                     new OptionalFrame();
+                } catch (Exception e) {
+                    stopStartFlag = false;
+                    new BadFormatOfFileException();
                 }
             }
         });
