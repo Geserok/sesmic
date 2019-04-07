@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class BadPathException extends Exception{
+public class BadPathException extends Exception {
 
     public BadPathException() {
         JFrame jFrame = new JFrame();

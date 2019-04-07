@@ -9,7 +9,7 @@ import java.util.List;
 
 import static UI.MainFrame.stopStartFlag;
 
-public class OptionalFrame extends JFrame{
+public class OptionalFrame extends JFrame {
 
     public OptionalFrame() {
         JLabel textLabel = new JLabel("Выберите следуюший лист excel");
@@ -34,7 +34,7 @@ public class OptionalFrame extends JFrame{
         });
 
 
-        this.setLayout(new GridLayout(2,1));
+        this.setLayout(new GridLayout(2, 1));
         this.add(textLabel);
         this.add(buttons);
         this.setSize(300, 200);

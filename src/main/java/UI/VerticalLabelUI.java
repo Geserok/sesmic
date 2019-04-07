@@ -21,7 +21,7 @@ public class VerticalLabelUI extends BasicLabelUI {
     @Override
     public Dimension getPreferredSize(JComponent c) {
         Dimension dim = super.getPreferredSize(c);
-        return new Dimension( dim.height, dim.width );
+        return new Dimension(dim.height, dim.width);
     }
 
     private static Rectangle paintIconR = new Rectangle();
@@ -31,7 +31,7 @@ public class VerticalLabelUI extends BasicLabelUI {
 
     @Override
     public void paint(Graphics g, JComponent c) {
-        JLabel label = (JLabel)c;
+        JLabel label = (JLabel) c;
         String text = label.getText();
         Icon icon = (label.isEnabled()) ? label.getIcon() : label.getDisabledIcon();
 
@@ -56,11 +56,11 @@ public class VerticalLabelUI extends BasicLabelUI {
         Graphics2D g2 = (Graphics2D) g;
         AffineTransform tr = g2.getTransform();
         if (clockwise) {
-            g2.rotate( Math.PI / 2 );
-            g2.translate( 0, - c.getWidth() );
+            g2.rotate(Math.PI / 2);
+            g2.translate(0, -c.getWidth());
         } else {
-            g2.rotate( - Math.PI / 2 );
-            g2.translate( - c.getHeight(), 0 );
+            g2.rotate(-Math.PI / 2);
+            g2.translate(-c.getHeight(), 0);
         }
 
         if (icon != null) {
@@ -77,7 +77,7 @@ public class VerticalLabelUI extends BasicLabelUI {
                 paintDisabledText(label, g, clippedText, textX, textY);
             }
         }
-        g2.setTransform( tr );
+        g2.setTransform(tr);
     }
 
 }

@@ -13,7 +13,7 @@ public class MainFrame extends JFrame {
     private static MainFrame instance;
 
     public static MainFrame getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new MainFrame();
         }
         return instance;

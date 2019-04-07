@@ -30,7 +30,7 @@ public class StartFrame extends JFrame {
                 MainFrame.getInstance().setVisible(false);
             }
             MainFrame.getInstance().setExtendedState(MAXIMIZED_BOTH);
-        } else if(returnValue == JFileChooser.CANCEL_OPTION) {
+        } else if (returnValue == JFileChooser.CANCEL_OPTION) {
             System.exit(1);
         }
 

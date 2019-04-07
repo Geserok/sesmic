@@ -29,7 +29,7 @@ public class ButtonsPanel extends JPanel {
         JTextArea speed = new JTextArea("60");
         speed.setBorder(new LineBorder(Color.BLACK));
         for (int i = 0; i < 5; i++) {
-            listParams.add(new JLabel("Param " + (i+1) + ":"));
+            listParams.add(new JLabel("Param " + (i + 1) + ":"));
         }
 
         this.setLayout(new FlowLayout());
