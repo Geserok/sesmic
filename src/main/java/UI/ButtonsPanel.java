@@ -29,7 +29,7 @@ public class ButtonsPanel extends JPanel {
         JTextArea speed = new JTextArea("60");
         speed.setBorder(new LineBorder(Color.BLACK));
         for (int i = 0; i < 5; i++) {
-            listParams.add(new JLabel("Param " + (i+1)));
+            listParams.add(new JLabel("Param " + (i+1) + ":"));
         }
 
         this.setLayout(new FlowLayout());
@@ -38,7 +38,7 @@ public class ButtonsPanel extends JPanel {
                 setBorder(new LineBorder(Color.BLACK));
                 setLayout(new GridLayout(8, 1));
                 add(startStop);
-                add(new JTextField("Скорость обновления(точек/мин):"));
+                add(new JLabel("Скорость обновления(точек/мин):")).setEnabled(false);
                 add(speed);
                 listParams.forEach(this::add);
             }
