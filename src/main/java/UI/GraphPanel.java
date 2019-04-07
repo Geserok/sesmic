@@ -5,11 +5,11 @@ import Exceptions.EndOfFileExceptions;
 import Services.CoordinateCreator;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYSeries;
-import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +24,8 @@ public class GraphPanel extends JPanel implements Runnable {
     private int currentYCoordinate = 1;
     private int quantityGraphs = 5;
 
+    private Timer timer;
+
     private static GraphPanel instance;
 
     public static GraphPanel getInstance() {
@@ -35,6 +37,18 @@ public class GraphPanel extends JPanel implements Runnable {
 
     private GraphPanel() {
         XChartPanel[] graphs = Graph.getArrayOfGraph(quantityGraphs);
+        timer = new Timer(speed, a -> {
+            {
+                try {
+                    update();
+                } catch (IOException e) {
+                    new BadPathException();
+                } catch (EndOfFileExceptions e) {
+                    stopStartFlag = false;
+                    new OptionalFrame();
+                }
+            }
+        });
         this.graphs = graphs;
         for (JPanel panel : graphs) {
             this.add(panel);
@@ -49,20 +63,13 @@ public class GraphPanel extends JPanel implements Runnable {
         while (true) {
             if (!stopStartFlag) {
                 try {
+                    timer.stop();
                     Thread.currentThread().sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             } else {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(speed);
-                    update();
-                } catch (InterruptedException | IOException e) {
-                    throw new BadPathException();
-                } catch (EndOfFileExceptions e) {
-                    stopStartFlag = false;
-                    new OptionalFrame();
-                }
+                timer.start();
             }
         }
     }
@@ -98,8 +105,7 @@ public class GraphPanel extends JPanel implements Runnable {
         }
         ButtonsPanel.getInstance().updateParams(paramNumber, xCoordinates);
         chart.removeSeries("Param " + paramNumber);
-        XYSeries series = chart.addSeries("Param " + paramNumber, xCoordinates, yCoordinates);
-        series.setMarker(SeriesMarkers.NONE);
+        chart.addSeries("Param " + paramNumber, xCoordinates, yCoordinates);
     }
 
     public int getSpeed() {
@@ -107,7 +113,8 @@ public class GraphPanel extends JPanel implements Runnable {
     }
 
     public void setSpeed(int speed) {
-        this.speed = 1000 * 1 / (speed / 60);
+        this.speed = (1000 * 60 / speed);
+        timer.setDelay(this.speed);
     }
 
 }

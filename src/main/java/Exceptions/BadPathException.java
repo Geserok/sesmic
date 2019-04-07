@@ -1,12 +1,13 @@
 package Exceptions;
 
+import UI.MainFrame;
 import UI.StartFrame;
 
 import javax.swing.*;
 import java.awt.*;
 
 
-public class BadPathException extends RuntimeException {
+public class BadPathException extends Exception{
 
     public BadPathException() {
         JFrame jFrame = new JFrame();

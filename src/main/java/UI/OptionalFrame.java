@@ -12,7 +12,7 @@ import static UI.MainFrame.stopStartFlag;
 public class OptionalFrame extends JFrame{
 
     public OptionalFrame() {
-        JTextField textField = new JTextField("Выберите следуюший лист excel");
+        JLabel textLabel = new JLabel("Выберите следуюший лист excel");
         List<String> lists = null;
         try {
             lists = CoordinateCreator.getInstance().getLists();
@@ -35,7 +35,7 @@ public class OptionalFrame extends JFrame{
 
 
         this.setLayout(new GridLayout(2,1));
-        this.add(textField);
+        this.add(textLabel);
         this.add(buttons);
         this.setSize(300, 200);
         this.setResizable(false);

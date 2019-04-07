@@ -119,7 +119,7 @@ public class CoordinateCreator {
         return listOfSheets;
     }
 
-    public void setPath(String path) {
+    public void setPath(String path) throws BadPathException {
         this.path = path;
         try {
             XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(path));
