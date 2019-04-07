@@ -124,13 +124,9 @@ public class CoordinateCreator {
         try {
             XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(path));
             sheet = myExcelBook.getSheetName(0);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new BadPathException();
         }
-    }
-
-    public Map<Integer, List<Double>> getMapOfXCoordinates() {
-        return xCoordinates;
     }
 
     public void setSheet(String sheet) {
