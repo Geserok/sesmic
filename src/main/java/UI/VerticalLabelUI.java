@@ -45,7 +45,6 @@ public class VerticalLabelUI extends BasicLabelUI {
         paintViewR.x = paintViewInsets.left;
         paintViewR.y = paintViewInsets.top;
 
-        // Use inverted height &amp; width
         paintViewR.height = c.getWidth() - (paintViewInsets.left + paintViewInsets.right);
         paintViewR.width = c.getHeight() - (paintViewInsets.top + paintViewInsets.bottom);
 

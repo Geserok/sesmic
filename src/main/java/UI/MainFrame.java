@@ -6,9 +6,25 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
 
-    static boolean stopStartFlag = true;
+    private JPanel graphPanel;
+    private JPanel buttonPanel;
 
-    public MainFrame(JPanel graphPanel, JPanel buttonPanel) {
+    static boolean stopStartFlag = false;
+    private static MainFrame instance;
+
+    public static MainFrame getInstance() {
+        if(instance == null){
+            instance = new MainFrame();
+        }
+        return instance;
+    }
+
+    private MainFrame() {
+        graphPanel = GraphPanel.getInstance();
+        buttonPanel = ButtonsPanel.getInstance();
+
+        JLabel southLabel = new JLabel("version 1.1");
+
         this.setLayout(new BorderLayout());
 
         JScrollPane scrollPane = new JScrollPane(graphPanel);
@@ -22,9 +38,8 @@ public class MainFrame extends JFrame {
         this.add(depth, BorderLayout.WEST);
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.EAST);
-        this.setSize(1300, 1000);
-        this.setMinimumSize(new Dimension(1300, 1000));
+        this.add(southLabel, BorderLayout.SOUTH);
+        this.setSize(640, 480);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setVisible(true);
     }
 }

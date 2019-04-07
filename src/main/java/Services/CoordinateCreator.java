@@ -1,58 +1,139 @@
 package Services;
 
+import Exceptions.BadPathException;
 import Exceptions.EndOfFileExceptions;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.xssf.streaming.SXSSFRow;
-import org.apache.poi.xssf.streaming.SXSSFSheet;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import UI.GraphPanel;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CoordinateCreator {
 
+    private String path;
+
+    private String sheet;
+
+    private static CoordinateCreator instance;
+
+    private Map<Integer, List<Double>> xCoordinates = new HashMap<>();
+
+    private List<Double> yCoordinates = new ArrayList<>();
+
+    public static CoordinateCreator getInstance() {
+        if (instance == null) {
+            instance = new CoordinateCreator();
+        }
+        return instance;
+    }
+
+    private CoordinateCreator() {
+    }
+
     public double[] getXCoordinates(int numPoints, int paramNumbers) throws IOException {
-        return readFromExcelX("C:\\Users\\Zstudent\\IdeaProjects\\sesmic\\src\\main\\resources\\data.xlsx", numPoints, paramNumbers);
+        if (xCoordinates.isEmpty()) {
+            readFromExcelX();
+        }
+        double[] newXcoordinates = new double[numPoints];
+        for (int i = 0; i < numPoints; i++) {
+            try {
+                newXcoordinates[i] = xCoordinates.get(paramNumbers).get(i);
+            } catch (IndexOutOfBoundsException e) {
+                throw new EndOfFileExceptions();
+            }
+        }
+        return newXcoordinates;
     }
 
     public double[] getYCoordinates(int numPoints) throws IOException {
-        return readFromExcelY("C:\\Users\\Zstudent\\IdeaProjects\\sesmic\\src\\main\\resources\\data.xlsx", numPoints);
+        if (yCoordinates.isEmpty()) {
+            readFromExcelY();
+        }
+        double[] newYcoordinates = new double[numPoints];
+        for (int i = 0; i < numPoints; i++) {
+            newYcoordinates[i] = yCoordinates.get(i);
+        }
+        return newYcoordinates;
     }
 
-    private double[] readFromExcelX(String file, int numPoints, int paramNumber) throws IOException {
-        XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(file));
-        XSSFSheet myExcelSheet = myExcelBook.getSheet("Sheet1");
-        double[] xCoordinates = new double[numPoints];
-        for (int i = 1; i < numPoints; i++) {
+    private void readFromExcelX() throws IOException {
+        XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(path));
+        XSSFSheet myExcelSheet = myExcelBook.getSheet(sheet);
+        for (int j = 1; j < 6; j++) {
+            List<Double> xCoordinate = new ArrayList<>();
+            int i = 1;
+            if (xCoordinates.get(j) != null) {
+                xCoordinate = xCoordinates.get(j);
+            }
+            while (true) {
+                XSSFRow row = myExcelSheet.getRow(i);
+                try {
+                    xCoordinate.add(row.getCell(j).getNumericCellValue());
+                    i++;
+                } catch (NullPointerException e) {
+                    break;
+                }
+            }
+            xCoordinates.put(j, xCoordinate);
+        }
+    }
+
+    private void readFromExcelY() throws IOException {
+        XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(path));
+        XSSFSheet myExcelSheet = myExcelBook.getSheet(sheet);
+        int i = 0;
+        while (true) {
             XSSFRow row = myExcelSheet.getRow(i + 1);
             try {
-                xCoordinates[i] = row.getCell(paramNumber).getNumericCellValue();
+                this.yCoordinates.add(-row.getCell(0).getNumericCellValue());
+                i++;
             } catch (NullPointerException e) {
-                throw new EndOfFileExceptions();
+                break;
             }
-
         }
+    }
+
+    public void updateData() {
+        try {
+            readFromExcelY();
+            readFromExcelX();
+            GraphPanel.getInstance().updatePanel();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getLists() throws IOException {
+        XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(path));
+        List<String> listOfSheets = new ArrayList<>();
+        int numberOfSheets = myExcelBook.getNumberOfSheets();
+        for (int i = 0; i < numberOfSheets; i++) {
+            listOfSheets.add(myExcelBook.getSheetName(i));
+        }
+        return listOfSheets;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+        try {
+            XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(path));
+            sheet = myExcelBook.getSheetName(0);
+        } catch (IOException e) {
+            throw new BadPathException();
+        }
+    }
+
+    public Map<Integer, List<Double>> getMapOfXCoordinates() {
         return xCoordinates;
     }
 
-    private double[] readFromExcelY(String file, int numPoints) throws IOException {
-        XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(file));
-        XSSFSheet myExcelSheet = myExcelBook.getSheet("Sheet1");
-        double[] yCoordinates = new double[numPoints];
-        for (int i = 0; i < numPoints; i++) {
-            XSSFRow row = myExcelSheet.getRow(i + 1);
-            try {
-                yCoordinates[i] = -row.getCell(0).getNumericCellValue();
-            } catch (NullPointerException e) {
-                throw new EndOfFileExceptions();
-            }
-        }
-        return yCoordinates;
+    public void setSheet(String sheet) {
+        this.sheet = sheet;
     }
-
 }

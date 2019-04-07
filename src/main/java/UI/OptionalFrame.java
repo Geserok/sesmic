@@ -1,14 +1,43 @@
 package UI;
 
+import Services.CoordinateCreator;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.util.List;
 
-public class OptionalFrame extends JFrame {
+import static UI.MainFrame.stopStartFlag;
 
-    public OptionalFrame() throws HeadlessException {
-        this.setLayout(new BorderLayout());
-        this.add(new JTextField("Optional menu"), BorderLayout.CENTER);
-        this.setSize(300, 300);
+public class OptionalFrame extends JFrame{
+
+    public OptionalFrame() {
+        JTextField textField = new JTextField("Выберите следуюший лист excel");
+        List<String> lists = null;
+        try {
+            lists = CoordinateCreator.getInstance().getLists();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new FlowLayout());
+        lists.forEach(a -> {
+            JButton listButton = new JButton(a);
+            listButton.addActionListener(e -> {
+                CoordinateCreator cc = CoordinateCreator.getInstance();
+                cc.setSheet(a);
+                cc.updateData();
+                stopStartFlag = true;
+                OptionalFrame.this.setVisible(false);
+            });
+            buttons.add(listButton);
+        });
+
+
+        this.setLayout(new GridLayout(2,1));
+        this.add(textField);
+        this.add(buttons);
+        this.setSize(300, 200);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         this.setVisible(true);

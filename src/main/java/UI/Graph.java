@@ -1,6 +1,5 @@
 package UI;
 
-
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
@@ -15,7 +14,7 @@ public class Graph {
                     .xAxisTitle("Диапазон")
                     .yAxisTitle("")
                     .width(200)
-                    .height(3000)
+                    .height(2000)
                     .build();
 
             chart.getStyler().setYAxisMin(-1000d);

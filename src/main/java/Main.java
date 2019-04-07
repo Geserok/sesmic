@@ -1,13 +1,15 @@
 import UI.ButtonsPanel;
 import UI.GraphPanel;
 import UI.MainFrame;
+import UI.StartFrame;
 
 public class Main {
 
     public static void main(String[] args) {
+        new StartFrame();
         GraphPanel graphPanel = GraphPanel.getInstance();
-        ButtonsPanel buttonPanel = new ButtonsPanel();
-        new MainFrame(graphPanel, buttonPanel);
+        ButtonsPanel.getInstance();
+        MainFrame.getInstance();
         graphPanel.run();
     }
 }
