@@ -99,7 +99,7 @@ public class CoordinateCreator {
         try {
             readFromExcelY();
             readFromExcelX();
-            //graphPanel.updatePanel();
+            graphPanel.updatePanel();
         } catch (IOException e) {
             e.printStackTrace();
         }

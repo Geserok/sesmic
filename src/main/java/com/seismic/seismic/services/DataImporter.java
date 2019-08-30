@@ -4,14 +4,15 @@ import com.seismic.seismic.data.Coordinates;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+@Service
 public class DataImporter {
 
-    @Setter
+    @Autowired
     private Coordinates coordinates;
 
     private boolean firstLineFlag = true;
@@ -32,7 +33,6 @@ public class DataImporter {
                     row = new StringBuilder();
                 }
             }
-            System.out.println(coordinates.getFirst());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,10 +40,10 @@ public class DataImporter {
 
     private void parseRow(String row) {
         String[] array = row.split("\\s+");
-        Double yCoordinate = Double.parseDouble(array[0]);
+        coordinates.addYCoordinate(Double.parseDouble(array[0]));
         for (int columnNumber = 1; columnNumber < array.length; columnNumber++) {
             Double xCoordinate = Double.parseDouble(array[columnNumber]);
-            coordinates.addCoordinate(yCoordinate, xCoordinate, columnNumber);
+            coordinates.addXCoordinate(xCoordinate, columnNumber);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.seismic.seismic.frames;
 
 import com.seismic.seismic.exceptions.BadPathException;
 import com.seismic.seismic.services.CoordinateCreator;
+import com.seismic.seismic.services.DataImporter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,15 @@ public class StartFrame extends JFrame {
     CoordinateCreator coordinateCreator;
     @Autowired
     MainFrame mainFrame;
+    @Autowired
+    DataImporter dataImporter;
 
     @PostConstruct
     public void init() throws HeadlessException {
         JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         fileChooser.setDialogTitle("Select excel file");
         fileChooser.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Select excel file", "xls", "xlsx");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Select excel file", "txt", "xls", "xlsx");
         fileChooser.addChoosableFileFilter(filter);
         int returnValue = fileChooser.showOpenDialog(null);
 
@@ -34,11 +37,12 @@ public class StartFrame extends JFrame {
             File selectedFile = fileChooser.getSelectedFile();
             setVisible(false);
             try {
-                coordinateCreator.setPath((selectedFile.getAbsolutePath()));
+                dataImporter.importData(selectedFile.getAbsolutePath());
                 mainFrame.setVisible(true);
-            } catch (BadPathException exception) {
+            } catch (Exception exception) {
                 mainFrame.setVisible(false);
-            }mainFrame.setExtendedState(MAXIMIZED_BOTH);
+            }
+            mainFrame.setExtendedState(MAXIMIZED_BOTH);
 
         } else if (returnValue == JFileChooser.CANCEL_OPTION) {
             System.exit(1);

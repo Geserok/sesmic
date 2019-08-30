@@ -1,29 +1,36 @@
 package com.seismic.seismic.data;
 
 import lombok.Getter;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
+@Component
 public class Coordinates {
 
-    private Map<Double, Double> first = new HashMap<>();
-    private Map<Double, Double> second = new HashMap<>();
-    private Map<Double, Double> third = new HashMap<>();
-    private Map<Double, Double> forth = new HashMap<>();
-    private Map<Double, Double> fifth = new HashMap<>();
+    private List<Double> xFirstCoordinates = new ArrayList<>();
+    private List<Double> xSecondCoordinates = new ArrayList<>();
+    private List<Double> xThirdCoordinates = new ArrayList<>();
+    private List<Double> xForthCoordinates = new ArrayList<>();
+    private List<Double> xFifthCoordinates = new ArrayList<>();
+    private List<Double> yCoordinates = new ArrayList<>();
 
-    public void addCoordinate(Double yCoordinate, Double xCoordinate, Integer numberOfGraph) {
+    public void addXCoordinate(Double xCoordinate, Integer numberOfGraph) {
         if (numberOfGraph == 1) {
-            first.put(yCoordinate, xCoordinate);
+            xFirstCoordinates.add(xCoordinate);
         } else if (numberOfGraph == 2) {
-            second.put(yCoordinate, xCoordinate);
+            xSecondCoordinates.add(xCoordinate);
         } else if (numberOfGraph == 3) {
-            third.put(yCoordinate, xCoordinate);
+            xThirdCoordinates.add(xCoordinate);
         } else if (numberOfGraph == 4) {
-            forth.put(yCoordinate, xCoordinate);
+            xForthCoordinates.add(xCoordinate);
         } else if (numberOfGraph == 5) {
-            fifth.put(yCoordinate, xCoordinate);
+            xFifthCoordinates.add(xCoordinate);
         }
+    }
+    public void addYCoordinate(Double yCoordinate) {
+        yCoordinates.add(yCoordinate);
     }
 }

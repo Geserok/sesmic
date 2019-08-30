@@ -21,11 +21,13 @@ public class GraphPanel extends JPanel implements Runnable {
     @Autowired
     private CoordinateCreator coordinateCreator;
     @Autowired
-    ButtonsPanel buttonsPanel;
+    private ButtonsPanel buttonsPanel;
     @Autowired
-    AppFlags appFlags;
+    private AppFlags appFlags;
+    @Autowired
+    private Graph graph;
 
-    private XYChart graphs;
+    private XYChart chart;
     private int speed = 1000;
     private double currentMinY = -1000d;
     private int currentYCoordinate = 1;
@@ -33,8 +35,7 @@ public class GraphPanel extends JPanel implements Runnable {
     private Timer timer;
 
     @PostConstruct
-    public void init() {
-        XYChart graphs = Graph.getArrayOfGraph();
+    public void init() throws IOException {
         timer = new Timer(appFlags.getSpeed(), a -> {
             {
                 try {
@@ -48,7 +49,8 @@ public class GraphPanel extends JPanel implements Runnable {
                 }
             }
         });
-        this.graphs = graphs;
+        chart = graph.getArrayOfGraph();
+        this.add(new XChartPanel<>(chart));
         this.setSize(800, 1000);
         this.setLayout(new FlowLayout());
         this.repaint();
@@ -56,6 +58,7 @@ public class GraphPanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
+        graph.addSeriesToChart(chart);
         timer.setDelay(appFlags.getSpeed());
         timer.start();
     }
@@ -65,31 +68,31 @@ public class GraphPanel extends JPanel implements Runnable {
     }
 
     public void update() throws IOException {
-        for (int i = 1; i < 6 ; i++) {
-            getSeriesForCharts(graphs, i);
-            i++;
-        }
-        currentYCoordinate++;
+//        for (int i = 1; i < 6 ; i++) {
+//            //getSeriesForCharts(graphs);
+//            i++;
+//        }
+//        currentYCoordinate++;
         this.repaint();
     }
 
     public void updatePanel() {
-            graphs.getStyler().setYAxisMin(graphs.getStyler().getYAxisMin() * 1.5);
-            currentMinY = graphs.getStyler().getYAxisMin();
+            chart.getStyler().setYAxisMin(chart.getStyler().getYAxisMin() * 1.5);
+            currentMinY = chart.getStyler().getYAxisMin();
     }
 
-    private void getSeriesForCharts(XYChart chart, int paramNumber) throws IOException {
-        double[] massY = new double[currentYCoordinate];
-        for (int j = 0; j < currentYCoordinate; j++) {
-            massY[j] = -j;
-        }
-        double[] xCoordinates = coordinateCreator.getXCoordinates(currentYCoordinate, paramNumber);
-        double[] yCoordinates = coordinateCreator.getYCoordinates(currentYCoordinate);
-        if (yCoordinates[currentYCoordinate - 1] < currentMinY) {
-            updatePanel();
-        }
-        buttonsPanel.updateParams(paramNumber, xCoordinates);
-        chart.removeSeries("Param " + paramNumber);
-        chart.addSeries("Param " + paramNumber, xCoordinates, yCoordinates);
-    }
+//    private void getSeriesForCharts(XYChart chart) throws IOException {
+//        double[] massY = new double[currentYCoordinate];
+//        for (int j = 0; j < currentYCoordinate; j++) {
+//            massY[j] = -j;
+//        }
+//        double[] xCoordinates = coordinateCreator.getXCoordinates(currentYCoordinate, paramNumber);
+//        double[] yCoordinates = coordinateCreator.getYCoordinates(currentYCoordinate);
+//        if (yCoordinates[currentYCoordinate - 1] < currentMinY) {
+//            updatePanel();
+//        }
+//        buttonsPanel.updateParams(paramNumber, xCoordinates);
+//        chart.removeSeries("Param " + paramNumber);
+//        chart.addSeries("Param " + paramNumber, xCoordinates, yCoordinates);
+//    }
 }

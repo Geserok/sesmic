@@ -1,49 +1,57 @@
 package com.seismic.seismic.frames;
 
+import com.seismic.seismic.data.Coordinates;
+import com.seismic.seismic.services.CoordinateCreator;
+import com.seismic.seismic.services.DataImporter;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+@Component
 public class Graph {
 
-    public static XYChart getArrayOfGraph() {
-        XYChart chart = new XYChartBuilder().width(800).height(600).theme(Styler.ChartTheme.Matlab).title("Matlab Theme").yAxisTitle("Глубина").build();
+    @Autowired
+    private Coordinates coordinates;
 
-        List<Integer> xData = new ArrayList<Integer>();
-        for (int i = 0; i < 640; i++) {
-            xData.add(i);
-        }
-        List<Double> y1Data = getYAxis(xData, 320, 160);
-        List<Double> y2Data = getYAxis(xData, 320, 320);
-        List<Double> y3Data = new ArrayList<Double>(xData.size());
-        for (int i = 0; i < 640; i++) {
-            y3Data.add(y1Data.get(i) - y2Data.get(i));
-        }
-
-        XYSeries series = chart.addSeries("Gaussian 1", xData, y1Data);
-        series.setMarker(SeriesMarkers.NONE);
-        series = chart.addSeries("Gaussian 2", xData, y2Data);
-        series.setMarker(SeriesMarkers.NONE);
-        series = chart.addSeries("Difference", xData, y3Data);
-        series.setMarker(SeriesMarkers.NONE);
-
+    public XYChart getArrayOfGraph() throws IOException {
+        XYChart chart = new XYChartBuilder().theme(Styler.ChartTheme.XChart).build();
+        chart.getStyler().setPlotGridLinesVisible(false);
+        chart.getStyler().setXAxisTickMarkSpacingHint(100);
         return chart;
     }
 
-    private static List<Double> getYAxis(List<Integer> xData, double mean, double std) {
+    public void addSeriesToChart(XYChart chart) {
+        List<Double> yCoordinates = coordinates.getYCoordinates();
+        List<Double> xFirstCoordinates = coordinates.getXThirdCoordinates();
+        List<Double> doubles = prepareCoordinates(xFirstCoordinates);
+        chart.addSeries("1", doubles, yCoordinates).setMarker(SeriesMarkers.NONE);
 
-        List<Double> yData = new ArrayList<Double>(xData.size());
+    }
 
-        for (int i = 0; i < xData.size(); i++) {
-            yData.add((1 / (std * Math.sqrt(2 * Math.PI))) * Math.exp(-(((xData.get(i) - mean) * (xData.get(i) - mean)) / ((2 * std * std)))));
+    private List<Double> prepareCoordinates(List<Double> xCoordinates) {
+        int size = xCoordinates.size();
+        List<Double> sortedCoordinates = new ArrayList(xCoordinates);
+        sortedCoordinates.sort(Double::compareTo);
+        Double maxBound = sortedCoordinates.get(size - 1);
+        Double minBound = sortedCoordinates.get(0);
+        if (minBound > 0) {
+            return xCoordinates.stream().map(a -> a - minBound).collect(Collectors.toList());
+        } else if (minBound < 0) {
+            return xCoordinates.stream().map(a -> a - minBound).collect(Collectors.toList());
+        } else {
+            return xCoordinates;
         }
-        return yData;
     }
 }
 
