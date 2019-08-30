@@ -1,4 +1,4 @@
-package UI;
+package com.seismic.seismic.frames;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;

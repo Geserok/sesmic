@@ -1,14 +1,11 @@
-package Exceptions;
-
-import UI.MainFrame;
-import UI.StartFrame;
-import sun.applet.Main;
+package com.seismic.seismic.exceptions;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class BadFormatOfFileException extends Exception {
-    public BadFormatOfFileException() {
+public class BadPathException extends Exception {
+
+    public BadPathException() {
         JFrame jFrame = new JFrame();
         jFrame.setLayout(new GridLayout(2, 1));
         jFrame.setResizable(false);
@@ -20,11 +17,13 @@ public class BadFormatOfFileException extends Exception {
         jFrame.setLocation(width / 4, height / 4);
         JButton button = new JButton("OK");
         button.addActionListener(e -> {
-            System.exit(-1);
+            //new StartFrame();
+            jFrame.setVisible(false);
         });
-        jFrame.add(new JLabel("Bad format of Excel file"));
+        jFrame.add(new JLabel("Bad path"));
         jFrame.add(button);
         jFrame.setSize(200, 100);
         jFrame.setVisible(true);
     }
+
 }

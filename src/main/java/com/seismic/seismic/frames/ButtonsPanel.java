@@ -1,30 +1,28 @@
-package UI;
+package com.seismic.seismic.frames;
 
+import com.seismic.seismic.services.AppFlags;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static UI.MainFrame.stopStartFlag;
-
+@Component
 public class ButtonsPanel extends JPanel {
 
+    @Autowired
+    private AppFlags appFlags;
+    @Autowired
     private GraphPanel graphPanel;
-
-    private static ButtonsPanel instance;
 
     private List<JLabel> listParams = new ArrayList<>();
 
-    public static ButtonsPanel getInstance() {
-        if (instance == null) {
-            instance = new ButtonsPanel();
-        }
-        return instance;
-    }
-
-    private ButtonsPanel() {
-        this.graphPanel = GraphPanel.getInstance();
+    @PostConstruct
+    public void init() {
         JButton startStop = new JButton("Start/stop");
         JTextArea speed = new JTextArea("60");
         speed.setBorder(new LineBorder(Color.BLACK));
@@ -45,17 +43,19 @@ public class ButtonsPanel extends JPanel {
         });
 
         startStop.addActionListener(e -> {
-            if (stopStartFlag) {
-                stopStartFlag = false;
+            if (appFlags.getStopStartFlag()) {
+                graphPanel.stop();
+                appFlags.setStopStartFlag(false);
             } else {
-                stopStartFlag = true;
+                appFlags.setStopStartFlag(true);
                 try {
                     int newSpeed = Integer.parseInt(speed.getText());
                     if (newSpeed > 0 && newSpeed <= 600) {
-                        graphPanel.setSpeed(newSpeed);
+                        appFlags.setSpeed(newSpeed);
                     }
+                    graphPanel.run();
                 } catch (NumberFormatException e1) {
-                    speed.setText(String.valueOf(graphPanel.getSpeed()));
+                    speed.setText(String.valueOf(appFlags.getSpeed()));
                 }
             }
         });

@@ -1,27 +1,24 @@
-package UI;
+package com.seismic.seismic.frames;
 
+import com.seismic.seismic.services.AppFlags;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
+@Component
 public class MainFrame extends JFrame {
 
-    private JPanel graphPanel;
-    private JPanel buttonPanel;
+    @Autowired
+    private GraphPanel graphPanel;
+    @Autowired
+    private ButtonsPanel buttonsPanel;
 
-    static boolean stopStartFlag = false;
-    private static MainFrame instance;
-
-    public static MainFrame getInstance() {
-        if (instance == null) {
-            instance = new MainFrame();
-        }
-        return instance;
-    }
-
-    private MainFrame() {
-        graphPanel = GraphPanel.getInstance();
-        buttonPanel = ButtonsPanel.getInstance();
+    @PostConstruct
+    public void init() {
 
         JLabel southLabel = new JLabel("version 1.1");
 
@@ -37,7 +34,7 @@ public class MainFrame extends JFrame {
 
         this.add(depth, BorderLayout.WEST);
         this.add(scrollPane, BorderLayout.CENTER);
-        this.add(buttonPanel, BorderLayout.EAST);
+        this.add(buttonsPanel, BorderLayout.EAST);
         this.add(southLabel, BorderLayout.SOUTH);
         this.setSize(640, 480);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

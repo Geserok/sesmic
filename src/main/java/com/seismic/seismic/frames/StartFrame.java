@@ -1,17 +1,28 @@
-package UI;
+package com.seismic.seismic.frames;
 
-import Exceptions.BadPathException;
-import Services.CoordinateCreator;
+import com.seismic.seismic.exceptions.BadPathException;
+import com.seismic.seismic.services.CoordinateCreator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
 
+@Component
 public class StartFrame extends JFrame {
 
-    public StartFrame() throws HeadlessException {
+    @Autowired
+    CoordinateCreator coordinateCreator;
+    @Autowired
+    MainFrame mainFrame;
+
+    @PostConstruct
+    public void init() throws HeadlessException {
         JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         fileChooser.setDialogTitle("Select excel file");
         fileChooser.setAcceptAllFileFilterUsed(false);
@@ -21,15 +32,13 @@ public class StartFrame extends JFrame {
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            StartFrame.this.setVisible(false);
-            CoordinateCreator coordinateCreator = CoordinateCreator.getInstance();
+            setVisible(false);
             try {
                 coordinateCreator.setPath((selectedFile.getAbsolutePath()));
-                MainFrame.getInstance().setVisible(true);
+                mainFrame.setVisible(true);
             } catch (BadPathException exception) {
-                MainFrame.getInstance().setVisible(false);
-            }
-            MainFrame.getInstance().setExtendedState(MAXIMIZED_BOTH);
+                mainFrame.setVisible(false);
+            }mainFrame.setExtendedState(MAXIMIZED_BOTH);
 
         } else if (returnValue == JFileChooser.CANCEL_OPTION) {
             System.exit(1);

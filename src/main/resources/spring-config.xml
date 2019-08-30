@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--     bean definitions here -->
+    <bean id="dataImporter" class="com.seismic.seismic.services.DataImporter">
+        <property name="coordinates" ref="coordinates"/>
+    </bean>
+    <bean id="coordinates" class="com.seismic.seismic.data.Coordinates"/>
+
+    <!--    Frame beans-->
+    <bean id="startFrame" class="com.seismic.seismic.frames.StartFrame">
+        <property name="coordinateCreator" ref="coordinateCreator" />
+        <property name="mainFrame" ref="mainFrame" />
+    </bean>
+    <bean id="coordinateCreator" class="com.seismic.seismic.services.CoordinateCreator" autowire="byName"/>
+    <bean id="mainFrame" class="com.seismic.seismic.frames.MainFrame" autowire="byName">
+        <property name="graphPanel" ref="com.seismic.seismic.frames.GraphPanel" />
+        <property name="buttonsPanel" ref="com.seismic.seismic.frames.ButtonsPanel" />
+    </bean>
+</beans>

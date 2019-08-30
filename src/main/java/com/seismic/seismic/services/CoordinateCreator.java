@@ -1,11 +1,15 @@
-package Services;
+package com.seismic.seismic.services;
 
-import Exceptions.BadPathException;
-import Exceptions.EndOfFileExceptions;
-import UI.GraphPanel;
+import com.seismic.seismic.exceptions.BadPathException;
+import com.seismic.seismic.exceptions.EndOfFileExceptions;
+import com.seismic.seismic.frames.GraphPanel;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,27 +18,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class CoordinateCreator {
+
+    @Autowired
+    GraphPanel graphPanel;
 
     private String path;
 
     private String sheet;
 
-    private static CoordinateCreator instance;
-
     private Map<Integer, List<Double>> xCoordinates = new HashMap<>();
 
     private List<Double> yCoordinates = new ArrayList<>();
-
-    public static CoordinateCreator getInstance() {
-        if (instance == null) {
-            instance = new CoordinateCreator();
-        }
-        return instance;
-    }
-
-    private CoordinateCreator() {
-    }
 
     public double[] getXCoordinates(int numPoints, int paramNumbers) throws IOException {
         if (xCoordinates.isEmpty()) {
@@ -103,7 +99,7 @@ public class CoordinateCreator {
         try {
             readFromExcelY();
             readFromExcelX();
-            GraphPanel.getInstance().updatePanel();
+            //graphPanel.updatePanel();
         } catch (IOException e) {
             e.printStackTrace();
         }
