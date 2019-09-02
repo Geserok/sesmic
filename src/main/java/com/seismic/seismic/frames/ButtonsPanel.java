@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,18 @@ public class ButtonsPanel extends JPanel {
     @PostConstruct
     public void init() {
         JButton startStop = new JButton("Start/stop");
-        JTextArea speed = new JTextArea("60");
+        //JTextArea speed = new JTextArea("60");
+        JSlider speed = new JSlider(1, 10, 1);
+        speed.setPaintLabels(true);
+        speed.setMajorTickSpacing(1);
+        speed.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JSlider slider = (JSlider)e.getSource();
+                int value = slider.getValue();
+                appFlags.setSpeed(value * 60);
+            }
+        });
         speed.setBorder(new LineBorder(Color.BLACK));
         for (int i = 0; i < 5; i++) {
             listParams.add(new JLabel("Param " + (i + 1) + ":"));
@@ -49,13 +62,13 @@ public class ButtonsPanel extends JPanel {
             } else {
                 appFlags.setStopStartFlag(true);
                 try {
-                    int newSpeed = Integer.parseInt(speed.getText());
+                    int newSpeed = Integer.parseInt(String.valueOf(speed.getValue() * 60));
                     if (newSpeed > 0 && newSpeed <= 600) {
                         appFlags.setSpeed(newSpeed);
                     }
                     graphPanel.run();
                 } catch (NumberFormatException e1) {
-                    speed.setText(String.valueOf(appFlags.getSpeed()));
+                    speed.setValue(appFlags.getSpeed() / 60);
                 }
             }
         });

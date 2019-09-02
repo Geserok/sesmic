@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 @Component
@@ -32,5 +34,55 @@ public class Coordinates {
     }
     public void addYCoordinate(Double yCoordinate) {
         yCoordinates.add(yCoordinate);
+    }
+
+    public List<Double> getXCoordinates(int graphNumber, int currentCoordinate) {
+        List<Double> shortListOfCoordinates = new ArrayList<>();
+        for (int i = 0; i < currentCoordinate; i++) {
+            switch (graphNumber) {
+                case 0 : {
+                    shortListOfCoordinates.add(xFirstCoordinates.get(i));
+                    break;
+                }
+                case 1 : {
+                    shortListOfCoordinates.add(xSecondCoordinates.get(i));
+                    break;
+                }
+                case 2 : {
+                    shortListOfCoordinates.add(xThirdCoordinates.get(i));
+                    break;
+                }
+                case 3 : {
+                    shortListOfCoordinates.add(xForthCoordinates.get(i));
+                    break;
+                }
+                case 4 : {
+                    shortListOfCoordinates.add(xFifthCoordinates.get(i));
+                    break;
+                }
+            }
+        }
+        return prepareCoordinates(shortListOfCoordinates, graphNumber);
+    }
+
+    public List<Double> getYCoordinates(int currentCoordinate) {
+        List<Double> shortListOfCoordinates = new ArrayList<>();
+        for (int i = 0; i < currentCoordinate; i++) {
+            shortListOfCoordinates.add(-yCoordinates.get(i));
+        }
+        return shortListOfCoordinates;
+    }
+
+    private List<Double> prepareCoordinates(List<Double> xCoordinates, int graphNumber) {
+        Optional<Double> minBound = xCoordinates.stream().min(Double::compareTo);
+        List<Double> collect = new ArrayList<>();
+        if (minBound.get() > 0) {
+            collect = xCoordinates.stream().map(a -> a - minBound.get()).collect(Collectors.toList());
+        } else if (minBound.get() < 0) {
+            collect = xCoordinates.stream().map(a -> a - minBound.get()).collect(Collectors.toList());
+        }
+        Optional<Double> maxBound = collect.stream().max(Double::compareTo);
+        double scale = 100 / (maxBound.get() + 1);
+        return collect.stream().map(a -> (a * scale) + graphNumber * 100 + 100 * (graphNumber-2)).collect(Collectors.toList());
     }
 }
