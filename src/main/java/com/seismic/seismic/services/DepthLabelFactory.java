@@ -28,7 +28,7 @@ public class DepthLabelFactory {
         button.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<Double> xCoordinatesForY = appData.getXCoordinatesForY((int) yCoordinate);
+                List<Double> xCoordinatesForY = appData.getXCoordinatesForY(yCoordinate);
                 double[] newXCooditanes = new double[5];
                 for (int i = 0; i < 5; i++) {
                     newXCooditanes[i] = xCoordinatesForY.get(i);

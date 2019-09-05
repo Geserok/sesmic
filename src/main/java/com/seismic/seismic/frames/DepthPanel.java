@@ -27,10 +27,10 @@ public class DepthPanel extends JPanel {
     public void refreshDepth() {
         removeAll();
         int i = appData.getYStart();
-        while (i < i + 10) {
-           add(depthLabelFactory.getDepthLabels(i));
-           i++;
+        for (int j = 0; j < 10; j++) {
+            add(depthLabelFactory.getDepthLabels(i));
+            i++;
         }
-        appData.setYStart(i - 5);
+        appData.setyStart(i - 5);
     }
 }

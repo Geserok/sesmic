@@ -16,9 +16,9 @@ public class AppData {
     @Autowired
     private Coordinates coordinates;
 
-    @Setter
     @Getter
     private int yStart = 0;
+
 
     private List<Double> visibleYCoordinates = new ArrayList<>();
     private List<Double> yCoordinates = new ArrayList<>();
@@ -71,4 +71,9 @@ public class AppData {
         return xCoordinates;
     }
 
+    public void setyStart(int yStart) {
+        if(yCoordinates.size() - 1 > yStart) {
+            this.yStart = yStart;
+        }
+    }
 }
