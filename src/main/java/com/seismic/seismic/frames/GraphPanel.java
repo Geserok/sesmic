@@ -3,6 +3,7 @@ package com.seismic.seismic.frames;
 import com.seismic.seismic.data.Coordinates;
 import com.seismic.seismic.exceptions.BadFormatOfFileException;
 import com.seismic.seismic.exceptions.EndOfFileExceptions;
+import com.seismic.seismic.services.AppData;
 import com.seismic.seismic.services.AppFlags;
 import com.seismic.seismic.services.CoordinateCreator;
 import lombok.Getter;
@@ -31,12 +32,18 @@ public class GraphPanel extends JPanel implements Runnable {
     private Graph graph;
     @Autowired
     private CustomJScrollPane customJScrollPane;
+    @Autowired
+    private RangePanel rangePanel;
+    @Autowired
+    private AppData appData;
+    @Autowired
+    private DepthPanel depthPanel;
 
     private XYChart chart;
     private int speed = 1000;
     @Getter
     private double currentMinY = -0.1d;
-    private int currentYCoordinate = 10;
+    private int currentYCoordinate = 1;
     private int quantityGraphs = 5;
     private Timer timer;
 
@@ -82,18 +89,19 @@ public class GraphPanel extends JPanel implements Runnable {
     }
 
     public void updatePanel() {
-        this.remove(0);
+        this.removeAll();
         chart = graph.getArrayOfGraph();
         add(new XChartPanel<>(chart));
-        setPreferredSize(new Dimension(getWidth(), chart.getHeight() + 100));
-        revalidate();
+        depthPanel.refreshDepth();
+        //setPreferredSize(new Dimension(chart.getWidth(), chart.getHeight()));
+        //revalidate();
         repaint();
     }
 
     private void getSeriesForCharts() {
         java.util.List<Double> yCoordinates = coordinates.getYCoordinates(currentYCoordinate);
         if (yCoordinates.get(currentYCoordinate - 1) < currentMinY) {
-            currentMinY = yCoordinates.get(currentYCoordinate - 1);
+            currentMinY = 2 * yCoordinates.get(currentYCoordinate - 1);
             updatePanel();
         }
         //buttonsPanel.updateParams(paramNumber, xCoordinates);
@@ -101,6 +109,8 @@ public class GraphPanel extends JPanel implements Runnable {
             chart.removeSeries(Integer.toString(seriesNumber));
             java.util.List<Double> xCoordinates = coordinates.getXCoordinates(seriesNumber, currentYCoordinate);
             graph.addSeriesToChart(chart, Integer.toString(seriesNumber),xCoordinates, yCoordinates);
+            rangePanel.updateRanges(seriesNumber);
+            appData.setVisibleYCoordinates(yCoordinates);
         }
     }
 }

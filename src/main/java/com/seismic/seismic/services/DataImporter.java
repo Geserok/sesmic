@@ -14,6 +14,8 @@ public class DataImporter {
 
     @Autowired
     private Coordinates coordinates;
+    @Autowired
+    private AppData appData;
 
     private boolean firstLineFlag = true;
 
@@ -41,9 +43,11 @@ public class DataImporter {
     private void parseRow(String row) {
         String[] array = row.split("\\s+");
         coordinates.addYCoordinate(Double.parseDouble(array[0]));
+        appData.addYCoordinate(Double.parseDouble(array[0]));
         for (int columnNumber = 1; columnNumber < array.length; columnNumber++) {
             Double xCoordinate = Double.parseDouble(array[columnNumber]);
             coordinates.addXCoordinate(xCoordinate, columnNumber);
+            appData.addXCoordinate(xCoordinate, columnNumber);
         }
     }
 }

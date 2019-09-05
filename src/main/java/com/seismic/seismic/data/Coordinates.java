@@ -1,6 +1,8 @@
 package com.seismic.seismic.data;
 
+import com.seismic.seismic.services.AppFlags;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,6 +13,9 @@ import java.util.stream.Collectors;
 @Getter
 @Component
 public class Coordinates {
+
+    @Autowired
+    private AppFlags appFlags;
 
     private List<Double> xFirstCoordinates = new ArrayList<>();
     private List<Double> xSecondCoordinates = new ArrayList<>();
@@ -74,15 +79,18 @@ public class Coordinates {
     }
 
     private List<Double> prepareCoordinates(List<Double> xCoordinates, int graphNumber) {
-        Optional<Double> minBound = xCoordinates.stream().min(Double::compareTo);
+        Optional<Double> min = xCoordinates.stream().min(Double::compareTo);
+        Optional<Double> max = xCoordinates.stream().max(Double::compareTo);
+        appFlags.addXmax(graphNumber, max.get());
+        appFlags.addXmin(graphNumber, min.get());
         List<Double> collect = new ArrayList<>();
-        if (minBound.get() > 0) {
-            collect = xCoordinates.stream().map(a -> a - minBound.get()).collect(Collectors.toList());
-        } else if (minBound.get() < 0) {
-            collect = xCoordinates.stream().map(a -> a - minBound.get()).collect(Collectors.toList());
+        if (min.get() > 0) {
+            collect = xCoordinates.stream().map(a -> a - min.get()).collect(Collectors.toList());
+        } else if (min.get() < 0) {
+            collect = xCoordinates.stream().map(a -> a - min.get()).collect(Collectors.toList());
         }
         Optional<Double> maxBound = collect.stream().max(Double::compareTo);
         double scale = 100 / (maxBound.get() + 1);
-        return collect.stream().map(a -> (a * scale) + graphNumber * 100 + 100 * (graphNumber-2)).collect(Collectors.toList());
+        return collect.stream().map(a -> (a * scale) + graphNumber * 100 + 100 * (graphNumber - 1)).collect(Collectors.toList());
     }
 }

@@ -74,7 +74,9 @@ public class ButtonsPanel extends JPanel {
         });
     }
 
-    public void updateParams(int paramNumber, double[] xCoordinates) {
-        listParams.get(paramNumber - 1).setText("Param " + paramNumber + ": " + xCoordinates[xCoordinates.length - 1]);
+    public void updateParams(double[] xCoordinates) {
+        for (int i = 0; i < 5; i++) {
+            listParams.get(i).setText("Param " + i + ": " + xCoordinates[i]);
+        }
     }
 }

@@ -23,7 +23,6 @@ public class CustomJScrollPane extends JScrollPane {
         setVerticalScrollBar(verticalScrollBar);
         setLayout(new ScrollPaneLayout());
         setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        setVisible(true);
         verticalScrollBar.addAdjustmentListener(new AdjustmentListener() {
             @Override
             public void adjustmentValueChanged(AdjustmentEvent e) {

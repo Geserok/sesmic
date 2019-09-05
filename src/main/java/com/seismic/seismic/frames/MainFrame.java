@@ -18,20 +18,21 @@ public class MainFrame extends JFrame {
     private ButtonsPanel buttonsPanel;
     @Autowired
     private CustomJScrollPane customJScrollPane;
-
+    @Autowired
+    private RangePanel rangePanel;
+    @Autowired
+    private DepthPanel depthPanel;
     @PostConstruct
     public void init() {
 
-        JLabel southLabel = new JLabel("version 1.2");
         this.setLayout(new BorderLayout());
-        JLabel depth = new JLabel("Глубина");
-        depth.setUI(new VerticalLabelUI(true));
-        depth.setHorizontalAlignment(SwingConstants.CENTER);
-        this.add(depth, BorderLayout.WEST);
-        this.add(customJScrollPane, BorderLayout.CENTER);
+        JPanel centrePanel = new JPanel();
+        centrePanel.setLayout(new BorderLayout());
+        centrePanel.add(customJScrollPane, BorderLayout.CENTER);
+        centrePanel.add(rangePanel, BorderLayout.SOUTH);
+        this.add(centrePanel, BorderLayout.CENTER);
         this.add(buttonsPanel, BorderLayout.EAST);
-        this.add(southLabel, BorderLayout.SOUTH);
-
+        this.add(depthPanel, BorderLayout.WEST);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
