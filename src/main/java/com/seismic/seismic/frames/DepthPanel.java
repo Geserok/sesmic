@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class DepthPanel extends JPanel {
@@ -24,13 +27,12 @@ public class DepthPanel extends JPanel {
             add(depthLabelFactory.getDepthLabels(i));
         }
     }
-    public void refreshDepth() {
-        removeAll();
-        int i = appData.getYStart();
-        for (int j = 0; j < 10; j++) {
-            add(depthLabelFactory.getDepthLabels(i));
-            i++;
+    public void refreshDepth(List<List<Double>> xCoordinates, List<Double> yCoordinates) {
+        for (int j = 0; j < yCoordinates.size(); j++) {
+            removeAll();
+            for (List<Double> list: xCoordinates) {
+                add(depthLabelFactory.getDepthLabels(yCoordinates.get(j), list));
+            }
         }
-        appData.setyStart(i - 5);
     }
 }

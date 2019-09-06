@@ -10,26 +10,29 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
 @Component
-public class CustomJScrollPane extends JScrollPane {
+public class CustomJScrollPane extends JPanel {
 
     @Autowired
     private GraphPanel graphPanel;
     @Autowired
     private AppFlags appFlags;
+    @Autowired
+    MainFrame mainFrame;
 
     @PostConstruct
     public void init() {
-        setViewportView(graphPanel);
-        setVerticalScrollBar(verticalScrollBar);
-        setLayout(new ScrollPaneLayout());
-        setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        verticalScrollBar.addAdjustmentListener(new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                if (appFlags.getStopStartFlag()) {
-                        e.getAdjustable().setValue(e.getAdjustable().getMaximum());
-                }
-            }
-        });
+        add(graphPanel);
+//        setViewportView(graphPanel);
+//        setVerticalScrollBar(verticalScrollBar);
+//        setLayout(new ScrollPaneLayout());
+//        setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+//        verticalScrollBar.addAdjustmentListener(new AdjustmentListener() {
+//            @Override
+//            public void adjustmentValueChanged(AdjustmentEvent e) {
+//                if (appFlags.getStopStartFlag()) {
+//                        e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+//                }
+//            }
+//        });
     }
 }

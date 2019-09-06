@@ -38,4 +38,21 @@ public class DepthLabelFactory {
         });
         return button;
     }
+
+    public JButton getDepthLabels(double yCoordinate, List<Double> xCoordinatesForAllGraphs) {
+        JButton button = new JButton(String.valueOf(yCoordinate));
+
+        button.setBorderPainted(false);
+        button.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double[] newXCooditanes = new double[5];
+                for (int i = 0; i < 5; i++) {
+                    newXCooditanes[i] = xCoordinatesForAllGraphs.get(i);
+                }
+                buttonsPanel.updateParams(newXCooditanes);
+            }
+        });
+        return button;
+    }
 }

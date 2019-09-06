@@ -16,6 +16,9 @@ import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class GraphPanel extends JPanel implements Runnable {
@@ -64,7 +67,6 @@ public class GraphPanel extends JPanel implements Runnable {
                 }
             }
         });
-        setSize(1000, 1000);
         chart = graph.getArrayOfGraph();
         add(new XChartPanel<>(chart));
         setLayout(new FlowLayout());
@@ -73,7 +75,6 @@ public class GraphPanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        getSeriesForCharts();
         timer.setDelay(appFlags.getSpeed());
         timer.start();
     }
@@ -84,7 +85,6 @@ public class GraphPanel extends JPanel implements Runnable {
 
     public void update() {
         getSeriesForCharts();
-        currentYCoordinate++;
         repaint();
     }
 
@@ -92,25 +92,51 @@ public class GraphPanel extends JPanel implements Runnable {
         this.removeAll();
         chart = graph.getArrayOfGraph();
         add(new XChartPanel<>(chart));
-        depthPanel.refreshDepth();
+        //depthPanel.refreshDepth();
         //setPreferredSize(new Dimension(chart.getWidth(), chart.getHeight()));
         //revalidate();
         repaint();
     }
 
     private void getSeriesForCharts() {
-        java.util.List<Double> yCoordinates = coordinates.getYCoordinates(currentYCoordinate);
-        if (yCoordinates.get(currentYCoordinate - 1) < currentMinY) {
-            currentMinY = 2 * yCoordinates.get(currentYCoordinate - 1);
-            updatePanel();
+        List<List<Double>> xCoordinates = new ArrayList<>();
+        List<Double> yCoordinates;
+        if (currentYCoordinate < 10) {
+            yCoordinates = appData.getYCoordinatesRange(0, currentYCoordinate);
+            for (int i = 0; i < currentYCoordinate; i++) {
+                List<Double> line = appData.getXCoordinatesForY(i);
+                xCoordinates.add(line);
+            }
+        } else {
+            yCoordinates = appData.getYCoordinatesRange(currentYCoordinate - 9, currentYCoordinate + 1);
+            for (int i = currentYCoordinate - 9; i < currentYCoordinate + 1; i++) {
+                List<Double> line = appData.getXCoordinatesForY(i);
+                xCoordinates.add(line);
+            }
+            chart.getStyler().setYAxisMax(yCoordinates.get(0));
+            chart.getStyler().setYAxisMin(yCoordinates.get(9));
         }
-        //buttonsPanel.updateParams(paramNumber, xCoordinates);
+        removeAllFormChart();
+        addGraphs(xCoordinates, yCoordinates);
+        currentYCoordinate++;
+        depthPanel.refreshDepth(xCoordinates, yCoordinates);
+    }
+
+    private void addGraphs(List<List<Double>> xCoordinates, List<Double> yCoordinates) {
         for (int seriesNumber = 0; seriesNumber < 5; seriesNumber++) {
-            chart.removeSeries(Integer.toString(seriesNumber));
-            java.util.List<Double> xCoordinates = coordinates.getXCoordinates(seriesNumber, currentYCoordinate);
-            graph.addSeriesToChart(chart, Integer.toString(seriesNumber),xCoordinates, yCoordinates);
+            List<Double> xForSingleGraph = new ArrayList<>();
+            for (List<Double> list: xCoordinates) {
+                xForSingleGraph.add(list.get(seriesNumber));
+            }
+            graph.addSeriesToChart(chart, Integer.toString(seriesNumber), xForSingleGraph, yCoordinates);
             rangePanel.updateRanges(seriesNumber);
             appData.setVisibleYCoordinates(yCoordinates);
+        }
+    }
+
+    private void removeAllFormChart() {
+        for (int seriesNumber = 0; seriesNumber < 5; seriesNumber++) {
+            chart.removeSeries(Integer.toString(seriesNumber));
         }
     }
 }

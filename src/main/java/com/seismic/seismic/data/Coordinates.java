@@ -78,7 +78,7 @@ public class Coordinates {
         return shortListOfCoordinates;
     }
 
-    private List<Double> prepareCoordinates(List<Double> xCoordinates, int graphNumber) {
+    public List<Double> prepareCoordinates(List<Double> xCoordinates, int graphNumber) {
         Optional<Double> min = xCoordinates.stream().min(Double::compareTo);
         Optional<Double> max = xCoordinates.stream().max(Double::compareTo);
         appFlags.addXmax(graphNumber, max.get());
@@ -86,7 +86,7 @@ public class Coordinates {
         List<Double> collect = new ArrayList<>();
         if (min.get() > 0) {
             collect = xCoordinates.stream().map(a -> a - min.get()).collect(Collectors.toList());
-        } else if (min.get() < 0) {
+        } else if (min.get() <= 0) {
             collect = xCoordinates.stream().map(a -> a - min.get()).collect(Collectors.toList());
         }
         Optional<Double> maxBound = collect.stream().max(Double::compareTo);

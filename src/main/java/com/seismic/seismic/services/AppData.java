@@ -29,7 +29,7 @@ public class AppData {
     private List<Double> xFifthCoordinates = new ArrayList<>();
 
     public void addYCoordinate(Double yCoordinate) {
-        yCoordinates.add(yCoordinate);
+        yCoordinates.add(-yCoordinate);
     }
 
     public void addXCoordinate(Double xCoordinate, Integer numberOfGraph) {
