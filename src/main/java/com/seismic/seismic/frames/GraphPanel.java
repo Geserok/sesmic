@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class GraphPanel extends JPanel implements Runnable {
@@ -88,16 +89,6 @@ public class GraphPanel extends JPanel implements Runnable {
         repaint();
     }
 
-    public void updatePanel() {
-        this.removeAll();
-        chart = graph.getArrayOfGraph();
-        add(new XChartPanel<>(chart));
-        //depthPanel.refreshDepth();
-        //setPreferredSize(new Dimension(chart.getWidth(), chart.getHeight()));
-        //revalidate();
-        repaint();
-    }
-
     private void getSeriesForCharts() {
         List<List<Double>> xCoordinates = new ArrayList<>();
         List<Double> yCoordinates;
@@ -131,12 +122,31 @@ public class GraphPanel extends JPanel implements Runnable {
             graph.addSeriesToChart(chart, Integer.toString(seriesNumber), xForSingleGraph, yCoordinates);
             rangePanel.updateRanges(seriesNumber);
             appData.setVisibleYCoordinates(yCoordinates);
+            if(appData.getLastVisibleCoordinate() > yCoordinates.get(yCoordinates.size() - 1)) {
+                appData.setLastVisibleCoordinate(yCoordinates.get(yCoordinates.size() - 1));
+            }
         }
     }
 
     private void removeAllFormChart() {
         for (int seriesNumber = 0; seriesNumber < 5; seriesNumber++) {
             chart.removeSeries(Integer.toString(seriesNumber));
+        }
+    }
+
+    public void upGraphs() {
+        if(currentYCoordinate > 11) {
+            currentYCoordinate = currentYCoordinate - 2;
+            getSeriesForCharts();
+            repaint();
+        }
+    }
+
+    public void downGraphs() {
+        double yCoordinate = appData.getYCoordinate(currentYCoordinate);
+        if (appData.getLastVisibleCoordinate() < yCoordinate) {
+                getSeriesForCharts();
+                repaint();
         }
     }
 }

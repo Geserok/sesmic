@@ -20,6 +20,7 @@ public class DepthPanel extends JPanel {
     DepthLabelFactory depthLabelFactory;
     @Autowired
     AppData appData;
+
     @PostConstruct
     public void init() {
         setLayout(new GridLayout(10, 0));
@@ -27,12 +28,12 @@ public class DepthPanel extends JPanel {
             add(depthLabelFactory.getDepthLabels(i));
         }
     }
+
     public void refreshDepth(List<List<Double>> xCoordinates, List<Double> yCoordinates) {
+        removeAll();
         for (int j = 0; j < yCoordinates.size(); j++) {
-            removeAll();
-            for (List<Double> list: xCoordinates) {
-                add(depthLabelFactory.getDepthLabels(yCoordinates.get(j), list));
-            }
+                add(depthLabelFactory.getDepthLabels(yCoordinates.get(j), xCoordinates.get(j)));
+
         }
     }
 }

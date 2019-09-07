@@ -22,17 +22,21 @@ public class MainFrame extends JFrame {
     private RangePanel rangePanel;
     @Autowired
     private DepthPanel depthPanel;
+    @Autowired
+    private ScrollButtons scrollButtons;
     @PostConstruct
     public void init() {
 
         this.setLayout(new BorderLayout());
         JPanel centrePanel = new JPanel();
         centrePanel.setLayout(new BorderLayout());
+        centrePanel.add(depthPanel, BorderLayout.WEST);
+        centrePanel.add(new JPanel(), BorderLayout.NORTH);
         centrePanel.add(customJScrollPane, BorderLayout.CENTER);
         centrePanel.add(rangePanel, BorderLayout.SOUTH);
+        centrePanel.add(scrollButtons, BorderLayout.EAST);
         this.add(centrePanel, BorderLayout.CENTER);
         this.add(buttonsPanel, BorderLayout.EAST);
-        this.add(depthPanel, BorderLayout.WEST);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }

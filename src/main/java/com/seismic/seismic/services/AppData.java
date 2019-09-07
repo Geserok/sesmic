@@ -18,8 +18,9 @@ public class AppData {
 
     @Getter
     private int yStart = 0;
-
-
+    @Setter
+    @Getter
+    private double lastVisibleCoordinate = 0d;
     private List<Double> visibleYCoordinates = new ArrayList<>();
     private List<Double> yCoordinates = new ArrayList<>();
     private List<Double> xFirstCoordinates = new ArrayList<>();

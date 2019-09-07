@@ -41,7 +41,6 @@ public class DepthLabelFactory {
 
     public JButton getDepthLabels(double yCoordinate, List<Double> xCoordinatesForAllGraphs) {
         JButton button = new JButton(String.valueOf(yCoordinate));
-
         button.setBorderPainted(false);
         button.addActionListener(new AbstractAction() {
             @Override

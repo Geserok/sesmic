@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Optional;
 
 @Component
 public class RangePanel extends JPanel {
@@ -24,7 +23,7 @@ public class RangePanel extends JPanel {
     @PostConstruct
     public void init() {
         GridBagLayout gridBagLayout = new GridBagLayout();
-        gridBagLayout.columnWidths = new int[]{300, 300, 300, 300, 300, 100};
+        gridBagLayout.columnWidths = new int[]{350, 300, 300, 300, 300};
         setLayout(gridBagLayout);
         add(firstRange = new JLabel("First"));
         add(secondRange = new JLabel("Second"));

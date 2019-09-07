@@ -10,6 +10,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class ButtonsPanel extends JPanel {
     private AppFlags appFlags;
     @Autowired
     private GraphPanel graphPanel;
+    @Autowired
+    private SettingsPanel settingsPanel;
 
     private List<JLabel> listParams = new ArrayList<>();
 
@@ -72,6 +76,14 @@ public class ButtonsPanel extends JPanel {
                 }
             }
         });
+        JButton settings = new JButton("Settings");
+        settings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                settingsPanel.turnOn();
+            }
+        });
+        add(settings);
     }
 
     public void updateParams(double[] xCoordinates) {
