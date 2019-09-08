@@ -111,6 +111,7 @@ public class GraphPanel extends JPanel implements Runnable {
         addGraphs(xCoordinates, yCoordinates);
         currentYCoordinate++;
         depthPanel.refreshDepth(xCoordinates, yCoordinates);
+        revalidate();
     }
 
     private void addGraphs(List<List<Double>> xCoordinates, List<Double> yCoordinates) {

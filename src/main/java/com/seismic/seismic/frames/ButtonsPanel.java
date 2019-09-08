@@ -46,16 +46,23 @@ public class ButtonsPanel extends JPanel {
         for (int i = 0; i < 5; i++) {
             listParams.add(new JLabel("Param " + (i + 1) + ":"));
         }
-
+        JButton settings = new JButton("Settings");
+        settings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                settingsPanel.turnOn();
+            }
+        });
         this.setLayout(new FlowLayout());
         this.add(new JPanel() {
             {
                 setBorder(new LineBorder(Color.BLACK));
-                setLayout(new GridLayout(8, 1));
+                setLayout(new GridLayout(9, 1));
                 add(startStop);
                 add(new JLabel("Скорость обновления(точек/мин):")).setEnabled(false);
                 add(speed);
                 listParams.forEach(this::add);
+                add(settings);
             }
         });
 
@@ -76,14 +83,6 @@ public class ButtonsPanel extends JPanel {
                 }
             }
         });
-        JButton settings = new JButton("Settings");
-        settings.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                settingsPanel.turnOn();
-            }
-        });
-        add(settings);
     }
 
     public void updateParams(double[] xCoordinates) {

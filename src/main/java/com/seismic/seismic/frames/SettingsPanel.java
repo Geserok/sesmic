@@ -1,5 +1,8 @@
 package com.seismic.seismic.frames;
 
+import com.seismic.seismic.data.Coordinates;
+import com.seismic.seismic.services.AppData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -9,6 +12,7 @@ import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 @Component
 public class SettingsPanel extends JFrame {
@@ -24,6 +28,8 @@ public class SettingsPanel extends JFrame {
     private JTextArea step4 = new JTextArea("100");
     private JTextArea step5 = new JTextArea("100");
 
+    @Autowired
+    private AppData appData;
 
     @PostConstruct
     public void init() {
@@ -86,8 +92,16 @@ public class SettingsPanel extends JFrame {
             int step3 = Integer.parseInt(text3);
             int step4 = Integer.parseInt(text4);
             int step5 = Integer.parseInt(text5);
+            int[] steps = new int[5];
+            steps[0] = step1;
+            steps[1] = step2;
+            steps[2] = step3;
+            steps[3] = step4;
+            steps[4] = step5;
+            appData.addToSteps(steps);
         } catch (Exception e) {
-
+            System.out.println(e);
         }
+        setVisible(false);
     }
 }

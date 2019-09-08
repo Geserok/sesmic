@@ -28,6 +28,7 @@ public class AppData {
     private List<Double> xThirdCoordinates = new ArrayList<>();
     private List<Double> xForthCoordinates = new ArrayList<>();
     private List<Double> xFifthCoordinates = new ArrayList<>();
+    private int[] steps = new int[]{100, 100, 100, 100, 100};
 
     public void addYCoordinate(Double yCoordinate) {
         yCoordinates.add(-yCoordinate);
@@ -72,9 +73,10 @@ public class AppData {
         return xCoordinates;
     }
 
-    public void setyStart(int yStart) {
-        if(yCoordinates.size() - 1 > yStart) {
-            this.yStart = yStart;
-        }
+    public void addToSteps(int[] steps) {
+       this.steps = steps;
+    }
+    public int[] getSteps() {
+        return steps;
     }
 }
